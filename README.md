@@ -1,3 +1,3 @@
-# Kalkulator
+# Interfejs użytkownika
 
-Tutaj dokona się cud stworzenia
+Tutaj za kilka dni dokona się cud stworzenia
