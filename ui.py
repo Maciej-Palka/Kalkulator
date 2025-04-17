@@ -20,6 +20,9 @@ class App:
         ctk.set_appearance_mode("white")
         ctk.set_default_color_theme("dark-blue")
 
+        self.number_zero_button = ctk.CTkButton(self.root, text="0", command=self.placeholder, height = 60, width = 60)
+        self.number_zero_button.grid(row=8, column=3, pady=5, sticky="w")
+
 
     # Funkcja tworząca etykietę
     def create_label(self, parent, row, column, label_text):
@@ -27,7 +30,8 @@ class App:
         label.grid(row=row, column=column, sticky="nw", columnspan=1, pady=2)
         return label
 
-    # Funkcja aktualizująca wskazania dotyczące położenia slidera
+    def placeholder(self):
+        print("placeholder")
 
 
 if __name__ == "__main__":
