@@ -16,14 +16,20 @@ class App:
 
     # Tworzenie widget'ów
     def create_widgets(self):
-        padx_images = 10
+        for i in range(5):  # zakładamy 5 kolumn (0–4), jeśli używasz column=1 i columnspan=4
+            self.root.columnconfigure(i, weight=1)
+            self.root.rowconfigure(i, weight=1)
+
         ctk.set_appearance_mode("white")
         ctk.set_default_color_theme("dark-blue")
         custom_font = ("Times",30,'bold')
 
+        self.lbox = tk.Listbox(self.root)
+        self.lbox.grid(row=0, column=1, columnspan=3, rowspan=2, padx=5, pady=5, sticky="nsew")
+
         self.dot_button = ctk.CTkButton(self.root, text=".", font=custom_font, command=self.placeholder,
                                                 height=60, width=60)
-        self.dot_button.grid(row=5, column=3, padx=5, pady=5, sticky="w")
+        self.dot_button.grid(row=5, column=3, padx=5, pady=5, sticky="nsew")
 
         self.number_zero_button = ctk.CTkButton(self.root, text="0", font=custom_font, command=self.placeholder, height=60, width=60)
         self.number_zero_button.grid(row=5, column=2, padx=5, pady=5, sticky="w")
