@@ -16,9 +16,11 @@ class App:
 
     # Tworzenie widget'ów
     def create_widgets(self):
-        for i in range(5):  # zakładamy 5 kolumn (0–4), jeśli używasz column=1 i columnspan=4
+        for i in range(5):  # zakładamy 5 kolumn (0–4)
             self.root.columnconfigure(i, weight=1)
-            self.root.rowconfigure(i, weight=1)
+
+        for i in range(6): self.root.rowconfigure(i, weight=1)
+
 
         ctk.set_appearance_mode("white")
         ctk.set_default_color_theme("dark-blue")
@@ -31,38 +33,48 @@ class App:
                                                 height=60, width=60)
         self.dot_button.grid(row=5, column=3, padx=5, pady=5, sticky="nsew")
 
-        self.number_zero_button = ctk.CTkButton(self.root, text="0", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_zero_button = ctk.CTkButton(self.root, text="0", font=custom_font, command=self.placeholder,
+                                                height=60, width=60)
         self.number_zero_button.grid(row=5, column=2, padx=5, pady=5, sticky="w")
 
         self.plus_minus_button = ctk.CTkButton(self.root, text="-/+", font=custom_font, command=self.placeholder,
                                                 height=60, width=60)
         self.plus_minus_button.grid(row=5, column=1, padx=5, pady=5, sticky="w")
 
-        self.number_one_button = ctk.CTkButton(self.root, text="1", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_one_button = ctk.CTkButton(self.root, text="1", font=custom_font, command=self.placeholder,
+                                               height=60, width=60)
         self.number_one_button.grid(row=4, column=1, padx=5, pady=5, sticky="w")
 
-        self.number_two_button = ctk.CTkButton(self.root, text="2", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_two_button = ctk.CTkButton(self.root, text="2", font=custom_font, command=self.placeholder,
+                                               height=60, width=60)
         self.number_two_button.grid(row=4, column=2, padx=5, pady=5, sticky="w")
 
-        self.number_three_button = ctk.CTkButton(self.root, text="3", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_three_button = ctk.CTkButton(self.root, text="3", font=custom_font, command=self.placeholder,
+                                                 height=60, width=60)
         self.number_three_button.grid(row=4, column=3, padx=5, pady=5, sticky="w")
 
-        self.number_four_button = ctk.CTkButton(self.root, text="4", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_four_button = ctk.CTkButton(self.root, text="4", font=custom_font, command=self.placeholder,
+                                                height=60, width=60)
         self.number_four_button.grid(row=3, column=1, padx=5, pady=5, sticky="w")
 
-        self.number_five_button = ctk.CTkButton(self.root, text="5", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_five_button = ctk.CTkButton(self.root, text="5", font=custom_font, command=self.placeholder,
+                                                height=60, width=60)
         self.number_five_button.grid(row=3, column=2, padx=5, pady=5, sticky="w")
 
-        self.number_six_button = ctk.CTkButton(self.root, text="6", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_six_button = ctk.CTkButton(self.root, text="6", font=custom_font, command=self.placeholder,
+                                               height=60, width=60)
         self.number_six_button.grid(row=3, column=3, padx=5, pady=5, sticky="w")
 
-        self.number_seven_button = ctk.CTkButton(self.root, text="7", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_seven_button = ctk.CTkButton(self.root, text="7", font=custom_font, command=self.placeholder,
+                                                 height=60, width=60)
         self.number_seven_button.grid(row=2, column=1, padx=5, pady=5, sticky="w")
 
-        self.number_eight_button = ctk.CTkButton(self.root, text="8", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_eight_button = ctk.CTkButton(self.root, text="8", font=custom_font, command=self.placeholder,
+                                                 height=60, width=60)
         self.number_eight_button.grid(row=2, column=2, padx=5, pady=5, sticky="w")
 
-        self.number_nine_button = ctk.CTkButton(self.root, text="9", font=custom_font, command=self.placeholder, height=60, width=60)
+        self.number_nine_button = ctk.CTkButton(self.root, text="9", font=custom_font, command=self.placeholder,
+                                                height=60, width=60)
         self.number_nine_button.grid(row=2, column=3, padx=5, pady=5, sticky="w")
 
 
@@ -73,6 +85,7 @@ class App:
         label.grid(row=row, column=column, sticky="nw", columnspan=1, pady=2)
         return label
 
+    # Funkcja testowa
     def placeholder(self):
         print("placeholder")
 
