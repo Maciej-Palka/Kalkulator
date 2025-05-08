@@ -12,13 +12,14 @@ def create_btn(parent, width, height, text, font, row, column, command):
 
 
 class App:
-    def __init__(self, root):
+    def __init__(self, disp):
         # Inicjalizacja elementów
-        self.root = root
+        self.lbox = None
+        self.root = disp
         self.create_widgets()
 
-        root.title("Calculator")
-        root.resizable(height=False, width=False)
+        disp.title("Calculator")
+        disp.resizable(height=False, width=False)
 
     # Tworzenie widget'ów
     def create_widgets(self):
