@@ -4,6 +4,12 @@ from tkinter import *  # for later
 from customtkinter import filedialog  # for later
 import os  # for later
 
+# Funkcja tworząca przycisk
+def create_btn(parent, width, height, text, font, row, column, command):
+    button = ctk.CTkButton(parent, text=text, font=font, command=command, height=height, width=width) # , corner_radius=10 # Dodać żeby bardziej zaokrąglić rogi
+    button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+    return button
+
 
 class App:
     def __init__(self, root):
@@ -32,53 +38,19 @@ class App:
         self.lbox = tk.Listbox(self.root)
         self.lbox.grid(row=0, column=1, columnspan=3, rowspan=2, padx=5, pady=5, sticky="nsew")
 
-        self.dot_button = ctk.CTkButton(self.root, text=".", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.dot_button.grid(row=5, column=3, padx=5, pady=5, sticky="nsew")
-
-        self.number_zero_button = ctk.CTkButton(self.root, text="0", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.number_zero_button.grid(row=5, column=2, padx=5, pady=5, sticky="nsew")
-
-        self.plus_minus_button = ctk.CTkButton(self.root, text="-/+", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.plus_minus_button.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
-
-        self.number_one_button = ctk.CTkButton(self.root, text="1", font=custom_font, command=self.placeholder,
-                                               height=btn_height, width=60)
-        self.number_one_button.grid(row=4, column=1, padx=5, pady=5, sticky="nsew")
-
-        self.number_two_button = ctk.CTkButton(self.root, text="2", font=custom_font, command=self.placeholder,
-                                               height=btn_height, width=60)
-        self.number_two_button.grid(row=4, column=2, padx=5, pady=5, sticky="nsew")
-
-        self.number_three_button = ctk.CTkButton(self.root, text="3", font=custom_font, command=self.placeholder,
-                                                 height=btn_height, width=60)
-        self.number_three_button.grid(row=4, column=3, padx=5, pady=5, sticky="nsew")
-
-        self.number_four_button = ctk.CTkButton(self.root, text="4", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.number_four_button.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
-
-        self.number_five_button = ctk.CTkButton(self.root, text="5", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.number_five_button.grid(row=3, column=2, padx=5, pady=5, sticky="nsew")
-
-        self.number_six_button = ctk.CTkButton(self.root, text="6", font=custom_font, command=self.placeholder,
-                                               height=btn_height, width=60)
-        self.number_six_button.grid(row=3, column=3, padx=5, pady=5, sticky="nsew")
-
-        self.number_seven_button = ctk.CTkButton(self.root, text="7", font=custom_font, command=self.placeholder,
-                                                 height=btn_height, width=60)
-        self.number_seven_button.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
-
-        self.number_eight_button = ctk.CTkButton(self.root, text="8", font=custom_font, command=self.placeholder,
-                                                 height=btn_height, width=60)
-        self.number_eight_button.grid(row=2, column=2, padx=5, pady=5, sticky="nsew")
-
-        self.number_nine_button = ctk.CTkButton(self.root, text="9", font=custom_font, command=self.placeholder,
-                                                height=btn_height, width=60)
-        self.number_nine_button.grid(row=2, column=3, padx=5, pady=5, sticky="nsew")
+        # Tworzenie przycisków
+        create_btn(self.root, btn_height, btn_width, ".", custom_font, 5, 3, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "0", custom_font, 5, 2, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "+/-", custom_font, 5, 1, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "1", custom_font, 4, 1, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "2", custom_font, 4, 2, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "3", custom_font, 4, 3, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "4", custom_font, 3, 1, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "5", custom_font, 3, 2, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "6", custom_font, 3, 3, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "7", custom_font, 2, 1, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "8", custom_font, 2, 2, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
 
 
 
