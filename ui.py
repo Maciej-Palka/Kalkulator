@@ -27,21 +27,23 @@ class App:
 
         for i in range(6): self.root.rowconfigure(i, weight=1)
 
-
+        # Ustawienie motywu
         ctk.set_appearance_mode("white")
         ctk.set_default_color_theme("dark-blue")
-        custom_font = ("Times",30,'bold')
 
+        # Zmienne przechowujące informacje dotyczące paramatrów przycisków
+        custom_font = ("Times",30,'bold')
         btn_width = 60
         btn_height = 60
 
+        # Tworzenie listbox - elementu stanowiącego wyświetlacz kalkulatora
         self.lbox = tk.Listbox(self.root)
         self.lbox.grid(row=0, column=1, columnspan=3, rowspan=2, padx=5, pady=5, sticky="nsew")
 
         # Tworzenie przycisków
         create_btn(self.root, btn_height, btn_width, ".", custom_font, 5, 3, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "0", custom_font, 5, 2, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "+/-", custom_font, 5, 1, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "-/+", custom_font, 5, 1, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "1", custom_font, 4, 1, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "2", custom_font, 4, 2, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "3", custom_font, 4, 3, self.placeholder)
