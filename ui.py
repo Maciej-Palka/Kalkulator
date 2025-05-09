@@ -63,13 +63,15 @@ class App:
 
         switch = ctk.CTkSwitch(self.root, text="", command=self.switch_event,
                                variable=self.switch_var, onvalue="on", offvalue="off")
-        switch.grid(row=0, column=5, padx=5, pady=5, sticky="nsew")
+        switch.grid(row=0, column=5, padx=5, pady=5, sticky="ew")
+
+        self.create_label(self.root, 1, 5, "Zespolone")
 
 
     # Funkcja tworząca etykietę
     def create_label(self, parent, row, column, label_text):
         label = ctk.CTkLabel(parent, text=f"{label_text} ", font=("Arial", 12))
-        label.grid(row=row, column=column, sticky="nw", columnspan=1, pady=2)
+        label.grid(row=row, column=column, sticky="ew", columnspan=1, pady=2)
         return label
 
     # Funkcja testowa
