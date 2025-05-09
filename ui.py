@@ -16,17 +16,22 @@ class App:
         # Inicjalizacja elementów
         self.lbox = None
         self.root = disp
+        self.switch_var = ctk.StringVar(value="on")
         self.create_widgets()
 
         disp.title("Calculator")
         disp.resizable(height=False, width=False)
 
+
+
     # Tworzenie widget'ów
     def create_widgets(self):
-        for i in range(6):  # zakładamy 5 kolumn (0–4)
+        for i in range(7):  # zakładamy 5 kolumn (0–4)
             self.root.columnconfigure(i, weight=1)
 
         for i in range(6): self.root.rowconfigure(i, weight=1)
+
+
 
         # Ustawienie motywu
         ctk.set_appearance_mode("white")
@@ -56,6 +61,9 @@ class App:
         create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
 
+        switch = ctk.CTkSwitch(self.root, text="", command=self.switch_event,
+                               variable=self.switch_var, onvalue="on", offvalue="off")
+        switch.grid(row=0, column=5, padx=5, pady=5, sticky="nsew")
 
 
     # Funkcja tworząca etykietę
@@ -67,6 +75,11 @@ class App:
     # Funkcja testowa
     def placeholder(self):
         print("placeholder")
+
+    def switch_event(self):
+        print("switch toggled, current value:", self.switch_var.get())
+
+
 
 
 if __name__ == "__main__":
