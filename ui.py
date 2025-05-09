@@ -23,7 +23,7 @@ class App:
 
     # Tworzenie widget'ów
     def create_widgets(self):
-        for i in range(5):  # zakładamy 5 kolumn (0–4)
+        for i in range(6):  # zakładamy 5 kolumn (0–4)
             self.root.columnconfigure(i, weight=1)
 
         for i in range(6): self.root.rowconfigure(i, weight=1)
@@ -54,6 +54,7 @@ class App:
         create_btn(self.root, btn_height, btn_width, "7", custom_font, 2, 1, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "8", custom_font, 2, 2, self.placeholder)
         create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
+        create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
 
 
 
@@ -70,6 +71,6 @@ class App:
 
 if __name__ == "__main__":
     root = ctk.CTk()
-    root.geometry("320x500")
+    root.geometry("400x500")
     app = App(root)
     root.mainloop()
