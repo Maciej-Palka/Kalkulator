@@ -26,6 +26,7 @@ class HistoriaOperacji:
     def __init__(self, max_pamiec = 10):
         self.historia =deque(maxlen=max_pamiec)
         self.indeks = -1
+        self.tryb_przegladania = False
 
     def zapisz(self, dzialanie: str, wynik: float):
         wpis = f"{dzialanie} = {wynik}"
@@ -34,7 +35,7 @@ class HistoriaOperacji:
 
     def pokaz(self):
         if not self.historia:
-            return "Brak zapisanych dzialan"
+            return
         if 0 <= self.indeks < len(self.historia):
             return self.historia[self.indeks]
 
@@ -42,13 +43,25 @@ class HistoriaOperacji:
     def wyczysc(self):
         self.historia.clear()
         self.indeks = -1
-        return
+        self.tryb_przegladania = False
 
-    def pokaz_wszystko(self):
-        if not self.historia:
-            return "Brak zapisanych działań."
-        return "\n".join(f"{i + 1}: {wpis}" for i, wpis in enumerate(self.historia))
 
+    def nastepne(self):
+        if self.indeks < len(self.historia) - 1:
+            self.indeks += 1
+        return self.pokaz()
+
+    def poprzednie(self):
+        if self.indeks > 0:
+            self.indeks -= 1
+        return self.pokaz()
+
+    def przelacz_przegladanie(self):
+        self.tryb_przegladania = not self.tryb_przegladania
+        if self.tryb_przegladania:
+            self.indeks = len(self.historia) - 1
+        else:
+            self.indeks = -1
 
 historia = HistoriaOperacji()
 
@@ -57,13 +70,15 @@ historia.zapisz("3 + 5",8)
 historia.zapisz("5 + 5",10)
 historia.zapisz("2 - 1",1)
 
-print(historia.pokaz())
+historia.przelacz_przegladanie()
+print(historia.pokaz())     # pokazuje ostatni wpis
+print(historia.poprzednie())
+print(historia.poprzednie())
+print(historia.nastepne())
 
-print(historia.pokaz_wszystko())
+# Czyszczenie:
 historia.wyczysc()
 print(historia.pokaz())
-
-
 
 
 
