@@ -17,4 +17,22 @@ def save_results_to_file(results, filename="results.txt"):
 
 
 def load_results_from_file(filename="results.txt"):
-    pass  # do zaimplementowania później
+    results = []
+    try:
+        with open(filename, "r") as file:
+            for line in file:
+                line = line.strip()
+                if " = " in line:
+                    # Rozbij linię na część: data czas, wyrażenie, wynik
+                    date, time, rest = line.split(" ", 2)
+                    expression, result = rest.split(" = ")
+                    results.append({
+                        "timestamp": f"{date} {time}",
+                        "expression": expression.strip(),
+                        "result": result.strip()
+                    })
+    except FileNotFoundError:
+        print("Plik nie istnieje.")
+    except Exception as e:
+        print(f"Błąd podczas importu: {e}")
+    return results
