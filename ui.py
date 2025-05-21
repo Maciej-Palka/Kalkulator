@@ -88,4 +88,5 @@ if __name__ == "__main__":
     root = ctk.CTk()
     root.geometry("400x500")
     app = App(root)
-    root.mainloop()
+    root.mainloop(
+
