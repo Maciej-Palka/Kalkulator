@@ -1,9 +1,3 @@
-# Kalkulator
-tutaj dokona się cud stworzenia
+# Interfejs użytkownika
 
-do omówienia: 
-- format zapisywania plików json
-- technologie
-- biblioteki
-- ide
-
+Tutaj za kilka dni dokona się cud stworzenia
