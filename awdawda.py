@@ -80,6 +80,8 @@ print(historia.nastepne())
 historia.wyczysc()
 print(historia.pokaz())
 
+historia.przelacz_przegladanie()
+print(historia.nastepne())
 
 
 '''
