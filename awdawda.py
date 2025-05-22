@@ -39,6 +39,18 @@ class HistoriaOperacji:
         if 0 <= self.indeks < len(self.historia):
             return self.historia[self.indeks]
 
+    def pobierz_aktualne_dzialanie(self):
+        """
+        Zwraca aktualnie wybrane działanie (część przed '='),
+        lub None jeśli brak wyboru.
+        """
+        if not self.historia:
+            return None
+        if 0 <= self.indeks < len(self.historia):
+            wpis = self.historia[self.indeks]
+            dzialanie = wpis.split('=')[0].strip()
+            return dzialanie
+        return None
 
     def wyczysc(self):
         self.historia.clear()
@@ -47,12 +59,12 @@ class HistoriaOperacji:
 
 
     def nastepne(self):
-        if self.indeks < len(self.historia) - 1:
+        if self.tryb_przegladania and self.indeks < len(self.historia) - 1:
             self.indeks += 1
         return self.pokaz()
 
     def poprzednie(self):
-        if self.indeks > 0:
+        if self.tryb_przegladania and self.indeks > 0:
             self.indeks -= 1
         return self.pokaz()
 
@@ -73,6 +85,7 @@ historia.zapisz("2 - 1",1)
 historia.przelacz_przegladanie()
 print(historia.pokaz())     # pokazuje ostatni wpis
 print(historia.poprzednie())
+print(historia.pobierz_aktualne_dzialanie())
 print(historia.poprzednie())
 print(historia.nastepne())
 
