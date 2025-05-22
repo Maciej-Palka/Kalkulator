@@ -8,6 +8,7 @@ def create_btn(parent, width, height, text, font, row, column, command):
 
 class App:
     def __init__(self, disp):
+
         self.root = disp
         self.equation = ''
         self.solutionPreview = ''
@@ -20,10 +21,10 @@ class App:
 
         for i in range(4):
             self.root.columnconfigure(i, weight=1)
-        for i in range(6):
+        for i in range(7):
             self.root.rowconfigure(i, weight=1)
 
-        ctk.set_appearance_mode("light")
+        #ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("dark-blue")
 
         self.equationsFrame = ctk.CTkFrame(self.root)
@@ -35,16 +36,16 @@ class App:
         self.labelSolution = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontSmall)
         self.labelSolution.grid(row=1, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
-        custom_font = ("Times", 24, 'bold')
-        btn_w, btn_h = 80, 60
+        custom_font = ("Times", 15, 'bold')
+        btn_w, btn_h = 20, 20
 
         # --- Buttons layout ---
         buttons = [
-            ("7", 2, 0), ("8", 2, 1), ("9", 2, 2), ("/", 2, 3),
-            ("4", 3, 0), ("5", 3, 1), ("6", 3, 2), ("*", 3, 3),
-            ("1", 4, 0), ("2", 4, 1), ("3", 4, 2), ("-", 4, 3),
-            ("0", 5, 0), (".", 5, 1), ("=", 5, 2), ("+", 5, 3),
-            ("C", 1, 0), ("B", 1, 1), ("R", 1, 2),
+            ("7", 3, 0), ("8", 3, 1), ("9", 3, 2), ("/", 2, 3),
+            ("4", 4, 0), ("5", 4, 1), ("6", 4, 2), ("*", 3, 3),
+            ("1", 5, 0), ("2", 5, 1), ("3", 5, 2), ("-", 4, 3),
+            ("0", 6, 0), (".", 6, 1), ("=", 6, 2), ("+", 5, 3),
+            ("C", 2, 0), ("B", 2, 1), ("R", 2, 2),
         ]
 
         for (text, r, c) in buttons:
@@ -97,6 +98,7 @@ class App:
             self.labelSolution.configure(text=self.solutionPreview)
 
 if __name__ == "__main__":
+    ctk.set_default_color_theme("dark-blue")
     root = ctk.CTk()
     root.geometry("400x500")
     app = App(root)
