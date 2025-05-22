@@ -33,48 +33,35 @@ class HistoriaOperacji:
         self.historia.append(wpis)
         self.indeks = len(self.historia)-1
 
-    def pokaz(self):
-        if not self.historia:
-            return
-        if 0 <= self.indeks < len(self.historia):
-            return self.historia[self.indeks]
-
-    def pobierz_aktualne_dzialanie(self):
-        """
-        Zwraca aktualnie wybrane działanie (część przed '='),
-        lub None jeśli brak wyboru.
-        """
-        if not self.historia:
-            return None
-        if 0 <= self.indeks < len(self.historia):
-            wpis = self.historia[self.indeks]
-            dzialanie = wpis.split('=')[0].strip()
-            return dzialanie
-        return None
-
-    def wyczysc(self):
-        self.historia.clear()
-        self.indeks = -1
-        self.tryb_przegladania = False
-
-
-    def nastepne(self):
-        if self.tryb_przegladania and self.indeks < len(self.historia) - 1:
-            self.indeks += 1
-        return self.pokaz()
-
-    def poprzednie(self):
-        if self.tryb_przegladania and self.indeks > 0:
-            self.indeks -= 1
-        return self.pokaz()
-
     def przelacz_przegladanie(self):
         self.tryb_przegladania = not self.tryb_przegladania
         if self.tryb_przegladania:
-            self.indeks = len(self.historia) - 1
-        else:
-            self.indeks = -1
+            self.index = len(self.historia) - 1
 
+    def czy_tryb_przegladania(self):
+        return self.tryb_przegladania
+
+    def pokaz(self):
+        if self.tryb_przegladania and 0 <= self.index < len(self.historia):
+            return self.historia[self.index]
+        return ""
+
+    def nastepne(self):
+        if self.tryb_przegladania and self.index < len(self.historia) - 1:
+            self.index += 1
+        return self.pokaz()
+
+    def poprzednie(self):
+        if self.tryb_przegladania and self.index > 0:
+            self.index -= 1
+        return self.pokaz()
+
+    def pobierz_aktualne_dzialanie(self):
+        if self.tryb_przegladania and 0 <= self.index < len(self.historia):
+            return self.historia[self.index].split('=')[0].strip()
+        return ""
+
+'''
 historia = HistoriaOperacji()
 
 historia.zapisz("2 + 2",4)
@@ -97,7 +84,7 @@ historia.przelacz_przegladanie()
 print(historia.nastepne())
 
 
-'''
+
 zapisz_operacje("2 + 2", 4)
 zapisz_operacje("3 + 2", 3)
 zapisz_operacje("2 - 1", 2)
