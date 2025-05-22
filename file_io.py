@@ -11,6 +11,9 @@ np. 2025-05-09 12:34:56 2 + 2 = 4
 
 
 def save_results_to_file(results, filename="results.txt"):
+    """
+       Zapisuje listę wyników do pliku tekstowego w ustalonym formacie.
+    """
     try:
         with open(filename, "w") as file:
             for item in results:
@@ -21,6 +24,9 @@ def save_results_to_file(results, filename="results.txt"):
 
 
 def load_results_from_file(filename="results.txt"):
+    """
+       Wczytuje wyniki z pliku tekstowego i zwraca listę słowników z timestampem, działaniem i wynikiem.
+       """
     results = []
     try:
         with open(filename, "r") as file:
