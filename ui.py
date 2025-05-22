@@ -1,6 +1,13 @@
 import customtkinter as ctk
 import math
+import cmath
 
+
+
+
+
+
+# funkcja tworząca przyciski
 def create_btn(parent, width, height, text, font, row, column, command):
     button = ctk.CTkButton(parent, text=text, font=font, command=command, height=height, width=width)
     button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
@@ -19,16 +26,16 @@ class App:
         disp.title("Calculator")
         disp.resizable(False, False)
 
+        # przypisanie wagi do poszczególnych rzędów
         for i in range(4):
             self.root.columnconfigure(i, weight=1)
-        for i in range(7):
+        for i in range(8):
             self.root.rowconfigure(i, weight=1)
 
-        #ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("dark-blue")
 
         self.equationsFrame = ctk.CTkFrame(self.root)
-        self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
+        self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=5, padx=10, pady=10, sticky="nsew")
 
         self.labelEquation = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontBig)
         self.labelEquation.grid(row=0, column=0, columnspan=4, padx=10, pady=5, sticky='w')
@@ -36,66 +43,91 @@ class App:
         self.labelSolution = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontSmall)
         self.labelSolution.grid(row=1, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
-        custom_font = ("Times", 15, 'bold')
+        custom_font = ("Times", 20, 'bold')
         btn_w, btn_h = 20, 20
 
-        # --- Buttons layout ---
+        # --- Rozkład przycisków ---
         buttons = [
-            ("7", 3, 0), ("8", 3, 1), ("9", 3, 2), ("/", 2, 3),
-            ("4", 4, 0), ("5", 4, 1), ("6", 4, 2), ("*", 3, 3),
-            ("1", 5, 0), ("2", 5, 1), ("3", 5, 2), ("-", 4, 3),
-            ("0", 6, 0), (".", 6, 1), ("=", 6, 2), ("+", 5, 3),
-            ("C", 2, 0), ("B", 2, 1), ("R", 2, 2),
+            ("(", 3, 0), (")", 3, 1), ("j", 3, 2),  # nowe
+            ("7", 4, 0), ("8", 4, 1), ("9", 4, 2), ("/", 2, 3),
+            ("4", 5, 0), ("5", 5, 1), ("6", 5, 2), ("*", 3, 3),
+            ("1", 6, 0), ("2", 6, 1), ("3", 6, 2), ("-", 4, 3),
+            ("0", 7, 0), (".", 7, 1), ("=", 7, 2), ("+", 5, 3),
+            ("C", 2, 0), ("B", 2, 1), ("R", 2, 2), ("^", 6, 3)
         ]
 
         for (text, r, c) in buttons:
             create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
 
+    def eval_equation(self, expr):
+        # Dozwolone funkcje i zmienne
+        allowed_names = {
+            "sqrt": cmath.sqrt,
+            "exp": cmath.exp,
+            "j": 1j,
+            "complex": complex,
+            "re": lambda x: x.real,
+            "im": lambda x: x.imag,
+        }
+
+        try:
+            # Zamień potęgowanie ^ na **
+            expr = expr.replace('^', '**')
+
+            # Ewaluacja wyrażenia z ograniczonym zakresem
+            result = eval(expr, {"__builtins__": None}, allowed_names)
+
+            # Zaokrąglenie wyników rzeczywistych
+            if isinstance(result, complex):
+                result = complex(round(result.real, 5), round(result.imag, 5))
+            elif isinstance(result, (int, float)):
+                result = round(result, 5)
+
+            return result
+        except Exception:
+            return "Error"
+
     def calculate(self, operator):
         if operator == 'C':
             self.equation = ''
-            self.solutionPreview = ''
+            self.solution = ''
             self.labelEquation.configure(text='')
             self.labelSolution.configure(text='')
 
         elif operator == '=':
-            try:
-                result = round(eval(self.equation), 5)
-                self.labelEquation.configure(text=str(result))
-                self.labelSolution.configure(text='')
-                self.equation = str(result)
-            except:
-                self.labelEquation.configure(text="Error")
-                self.equation = ''
+            self.solution = ''
+            self.solution = self.eval_equation(self.equation)
+            self.labelEquation.configure(text=self.solution, font=self.fontBig)
+            self.labelSolution.configure(text='')
+            self.solution = ''
 
         elif operator == 'B':
             self.equation = self.equation[:-1]
-            try:
-                self.solutionPreview = str(round(eval(self.equation), 5))
-            except:
-                self.solutionPreview = ''
-            self.labelEquation.configure(text=self.equation)
-            self.labelSolution.configure(text=self.solutionPreview)
+            self.solutionPreview = self.eval_equation(self.equation)
+            self.labelEquation.configure(text=self.equation, font=self.fontBig)
+            self.labelSolution.configure(text=self.solutionPreview, font=self.fontSmall)
 
         elif operator == 'R':
             try:
-                result = math.sqrt(eval(self.equation))
-                result = round(result, 5)
-                self.labelEquation.configure(text=str(result))
-                self.labelSolution.configure(text='')
-                self.equation = str(result)
+                value = self.eval_equation(self.equation)
+                if isinstance(value, str) and value == "Error":
+                    raise ValueError()
+                self.solution = cmath.sqrt(value)
+                if isinstance(self.solution, complex):
+                    self.solution = complex(round(self.solution.real, 5), round(self.solution.imag, 5))
+                else:
+                    self.solution = round(self.solution, 5)
             except:
-                self.labelEquation.configure(text="Error")
-                self.equation = ''
+                self.solution = 'Error'
+            self.labelEquation.configure(text=self.solution, font=self.fontBig)
+            self.labelSolution.configure(text='')
 
         else:
             self.equation += str(operator)
-            try:
-                self.solutionPreview = str(round(eval(self.equation), 5))
-            except:
-                self.solutionPreview = ''
-            self.labelEquation.configure(text=self.equation)
-            self.labelSolution.configure(text=self.solutionPreview)
+            self.solutionPreview = self.eval_equation(self.equation)
+            self.labelEquation.configure(text=self.equation, font=self.fontBig)
+            self.labelSolution.configure(text=self.solutionPreview, font=self.fontSmall)
+
 
 if __name__ == "__main__":
     ctk.set_default_color_theme("dark-blue")
