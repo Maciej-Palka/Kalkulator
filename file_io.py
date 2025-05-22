@@ -50,3 +50,15 @@ def load_results_from_file(filename="results.txt"):
     loaded = load_results_from_file()
     for r in loaded:
         print(r)
+
+
+if __name__ == "__main__":
+    test_results = [
+        {"expression": "3 + 3", "result": 6},
+        {"expression": "10 / 2", "result": 5}
+    ]
+
+    save_results_to_file(test_results)
+    loaded = load_results_from_file()
+    for r in loaded:
+        print(r)
