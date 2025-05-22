@@ -6,13 +6,9 @@ Standard zapisu wyników do pliku:
 np. 2025-05-09 12:34:56 2 + 2 = 4
 """
 
-
-
-
-
 def save_results_to_file(results, filename="results.txt"):
     """
-       Zapisuje listę wyników do pliku tekstowego w ustalonym formacie.
+    Zapisuje listę wyników do pliku tekstowego w ustalonym formacie.
     """
     try:
         with open(filename, "w") as file:
@@ -25,17 +21,17 @@ def save_results_to_file(results, filename="results.txt"):
 
 def load_results_from_file(filename="results.txt"):
     """
-       Wczytuje wyniki z pliku tekstowego i zwraca listę słowników z timestampem, działaniem i wynikiem.
-       """
+    Wczytuje wyniki z pliku tekstowego i zwraca listę słowników z timestampem, działaniem i wynikiem.
+    """
     results = []
     try:
         with open(filename, "r") as file:
             for line in file:
                 line = line.strip()
-                if " = " in line:
+                if " = " not in line:
                     continue
-                try:
 
+                try:
                     date, time, rest = line.split(" ", 2)
                     expression, result = rest.split(" = ")
                     results.append({
@@ -46,25 +42,10 @@ def load_results_from_file(filename="results.txt"):
                 except ValueError:
                     print(f"Błąd parsowania linii: {line}")
                     continue
+
     except FileNotFoundError:
         print(f"Plik '{filename}' nie istnieje.")
     except Exception as e:
         print(f"Błąd podczas importu: {e}")
+
     return results
-
-    save_results_to_file(test_results)
-    loaded = load_results_from_file()
-    for r in loaded:
-        print(r)
-
-
-if __name__ == "__main__":
-    test_results = [
-        {"expression": "3 + 3", "result": 6},
-        {"expression": "10 / 2", "result": 5}
-    ]
-
-    save_results_to_file(test_results)
-    loaded = load_results_from_file()
-    for r in loaded:
-        print(r)
