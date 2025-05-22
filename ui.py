@@ -1,92 +1,103 @@
-import tkinter as tk  # for later
 import customtkinter as ctk
-from tkinter import *  # for later
-from customtkinter import filedialog  # for later
-import os  # for later
+import math
 
-# Funkcja tworząca przycisk
 def create_btn(parent, width, height, text, font, row, column, command):
-    button = ctk.CTkButton(parent, text=text, font=font, command=command, height=height, width=width) # , corner_radius=10 # Dodać żeby bardziej zaokrąglić rogi
+    button = ctk.CTkButton(parent, text=text, font=font, command=command, height=height, width=width)
     button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
     return button
 
-
 class App:
     def __init__(self, disp):
-        # Inicjalizacja elementów
-        self.lbox = None
         self.root = disp
-        self.switch_var = ctk.StringVar(value="on")
-        self.create_widgets()
+        self.equation = ''
+        self.solutionPreview = ''
+
+        self.fontSmall = ctk.CTkFont(size=15)
+        self.fontBig = ctk.CTkFont(size=30)
 
         disp.title("Calculator")
-        disp.resizable(height=False, width=False)
+        disp.resizable(False, False)
 
-
-
-    # Tworzenie widget'ów
-    def create_widgets(self):
-        for i in range(7):  # zakładamy 5 kolumn (0–4)
+        for i in range(4):
             self.root.columnconfigure(i, weight=1)
+        for i in range(6):
+            self.root.rowconfigure(i, weight=1)
 
-        for i in range(6): self.root.rowconfigure(i, weight=1)
-
-
-
-        # Ustawienie motywu
-        ctk.set_appearance_mode("white")
+        ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("dark-blue")
 
-        # Zmienne przechowujące informacje dotyczące paramatrów przycisków
-        custom_font = ("Times",30,'bold')
-        btn_width = 60
-        btn_height = 60
+        self.equationsFrame = ctk.CTkFrame(self.root)
+        self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
 
-        # Tworzenie listbox - elementu stanowiącego wyświetlacz kalkulatora
-        self.lbox = tk.Listbox(self.root)
-        self.lbox.grid(row=0, column=1, columnspan=3, rowspan=2, padx=5, pady=5, sticky="nsew")
+        self.labelEquation = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontBig)
+        self.labelEquation.grid(row=0, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
-        # Tworzenie przycisków
-        create_btn(self.root, btn_height, btn_width, ".", custom_font, 5, 3, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "0", custom_font, 5, 2, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "-/+", custom_font, 5, 1, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "1", custom_font, 4, 1, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "2", custom_font, 4, 2, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "3", custom_font, 4, 3, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "4", custom_font, 3, 1, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "5", custom_font, 3, 2, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "6", custom_font, 3, 3, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "7", custom_font, 2, 1, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "8", custom_font, 2, 2, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
-        create_btn(self.root, btn_height, btn_width, "9", custom_font, 2, 3, self.placeholder)
+        self.labelSolution = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontSmall)
+        self.labelSolution.grid(row=1, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
-        switch = ctk.CTkSwitch(self.root, text="", command=self.switch_event,
-                               variable=self.switch_var, onvalue="on", offvalue="off")
-        switch.grid(row=0, column=5, padx=5, pady=5, sticky="ew")
+        custom_font = ("Times", 24, 'bold')
+        btn_w, btn_h = 80, 60
 
-        self.create_label(self.root, 1, 5, "Zespolone")
+        # --- Buttons layout ---
+        buttons = [
+            ("7", 2, 0), ("8", 2, 1), ("9", 2, 2), ("/", 2, 3),
+            ("4", 3, 0), ("5", 3, 1), ("6", 3, 2), ("*", 3, 3),
+            ("1", 4, 0), ("2", 4, 1), ("3", 4, 2), ("-", 4, 3),
+            ("0", 5, 0), (".", 5, 1), ("=", 5, 2), ("+", 5, 3),
+            ("C", 1, 0), ("B", 1, 1), ("R", 1, 2),
+        ]
 
+        for (text, r, c) in buttons:
+            create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
 
-    # Funkcja tworząca etykietę
-    def create_label(self, parent, row, column, label_text):
-        label = ctk.CTkLabel(parent, text=f"{label_text} ", font=("Arial", 12))
-        label.grid(row=row, column=column, sticky="ew", columnspan=1, pady=2)
-        return label
+    def calculate(self, operator):
+        if operator == 'C':
+            self.equation = ''
+            self.solutionPreview = ''
+            self.labelEquation.configure(text='')
+            self.labelSolution.configure(text='')
 
-    # Funkcja testowa
-    def placeholder(self):
-        print("placeholder")
+        elif operator == '=':
+            try:
+                result = round(eval(self.equation), 5)
+                self.labelEquation.configure(text=str(result))
+                self.labelSolution.configure(text='')
+                self.equation = str(result)
+            except:
+                self.labelEquation.configure(text="Error")
+                self.equation = ''
 
-    def switch_event(self):
-        print("switch toggled, current value:", self.switch_var.get())
+        elif operator == 'B':
+            self.equation = self.equation[:-1]
+            try:
+                self.solutionPreview = str(round(eval(self.equation), 5))
+            except:
+                self.solutionPreview = ''
+            self.labelEquation.configure(text=self.equation)
+            self.labelSolution.configure(text=self.solutionPreview)
 
+        elif operator == 'R':
+            try:
+                result = math.sqrt(eval(self.equation))
+                result = round(result, 5)
+                self.labelEquation.configure(text=str(result))
+                self.labelSolution.configure(text='')
+                self.equation = str(result)
+            except:
+                self.labelEquation.configure(text="Error")
+                self.equation = ''
 
-
+        else:
+            self.equation += str(operator)
+            try:
+                self.solutionPreview = str(round(eval(self.equation), 5))
+            except:
+                self.solutionPreview = ''
+            self.labelEquation.configure(text=self.equation)
+            self.labelSolution.configure(text=self.solutionPreview)
 
 if __name__ == "__main__":
     root = ctk.CTk()
     root.geometry("400x500")
     app = App(root)
     root.mainloop()
-
