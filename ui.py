@@ -16,15 +16,20 @@ def create_btn(parent, width, height, text, font, row, column, command):
 class App:
     def __init__(self, disp):
 
+        # zmienne potrzebne później
         self.root = disp
         self.equation = ''
         self.solutionPreview = ''
 
+        # rozmiar czcionki
         self.fontSmall = ctk.CTkFont(size=15)
         self.fontBig = ctk.CTkFont(size=30)
 
+        # parametry okienka/aplikacji
         disp.title("Calculator")
         disp.resizable(False, False)
+        ctk.set_default_color_theme("dark-blue")
+
 
         # przypisanie wagi do poszczególnych rzędów
         for i in range(4):
@@ -32,17 +37,19 @@ class App:
         for i in range(8):
             self.root.rowconfigure(i, weight=1)
 
-        ctk.set_default_color_theme("dark-blue")
 
+        # ramka z rozwiązaniami
         self.equationsFrame = ctk.CTkFrame(self.root)
         self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=5, padx=10, pady=10, sticky="nsew")
 
+        # informacje o aktualnej operacji
         self.labelEquation = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontBig)
         self.labelEquation.grid(row=0, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
         self.labelSolution = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontSmall)
         self.labelSolution.grid(row=1, column=0, columnspan=4, padx=10, pady=5, sticky='w')
 
+        # czcionka
         custom_font = ("Times", 20, 'bold')
         btn_w, btn_h = 20, 20
 
@@ -56,9 +63,11 @@ class App:
             ("C", 2, 0), ("B", 2, 1), ("R", 2, 2), ("^", 6, 3)
         ]
 
+        #stworzenie odpo
         for (text, r, c) in buttons:
             create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
 
+    # funkcja licząca
     def eval_equation(self, expr):
         # Dozwolone funkcje i zmienne
         allowed_names = {
@@ -71,13 +80,13 @@ class App:
         }
 
         try:
-            # Zamień potęgowanie ^ na **
+            # zamień potęgowanie ^ na **
             expr = expr.replace('^', '**')
 
-            # Ewaluacja wyrażenia z ograniczonym zakresem
+            # ewaluacja wyrażenia z ograniczonym zakresem
             result = eval(expr, {"__builtins__": None}, allowed_names)
 
-            # Zaokrąglenie wyników rzeczywistych
+            # zaokrąglenie wyników rzeczywistych
             if isinstance(result, complex):
                 result = complex(round(result.real, 5), round(result.imag, 5))
             elif isinstance(result, (int, float)):
@@ -87,6 +96,7 @@ class App:
         except Exception:
             return "Error"
 
+    # funkcja od wykonywania operatorów
     def calculate(self, operator):
         if operator == 'C':
             self.equation = ''
