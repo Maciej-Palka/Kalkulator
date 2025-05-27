@@ -140,7 +140,8 @@ class App:
             ("4", 5, 0), ("5", 5, 1), ("6", 5, 2), ("*", 3, 3),
             ("1", 6, 0), ("2", 6, 1), ("3", 6, 2), ("-", 4, 3),
             ("0", 7, 0), (".", 7, 1), ("=", 7, 2), ("+", 5, 3),
-            ("C", 2, 0), ("B", 2, 1), ("R", 2, 2), ("^", 6, 3)
+            ("C", 2, 0), ("B", 2, 1), ("R", 2, 2), ("^", 6, 3),
+            ("T", 9, 2), ("E", 9, 3)
         ]
 
         #stworzenie odpo
@@ -261,6 +262,32 @@ class App:
             except FileNotFoundError:
                 self.labelEquation.configure(text="Import failed!", font=self.fontBig)
                 self.labelSolution.configure(text="", font=self.fontSmall)
+        elif operator == 'T':
+            if self.equation.strip() == '':
+                self.labelSolution.configure(text="Enter expression first", font=self.fontSmall)
+                return
+            val = self.eval_equation(self.equation)
+            if isinstance(val, complex):
+                r = abs(val)
+                theta = cmath.phase(val)
+                theta_deg = math.degrees(theta)
+                trig_str = f"{r:.5f} (cos {theta_deg:.2f}° + i sin {theta_deg:.2f}°)"
+                self.labelSolution.configure(text=trig_str, font=self.fontSmall)
+            else:
+                self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
+        elif operator == 'E':  # <-- added handler for exponential form
+            if self.equation.strip() == '':
+                self.labelSolution.configure(text="Enter expression first", font=self.fontSmall)
+                return
+            val = self.eval_equation(self.equation)
+            if isinstance(val, complex):
+                r = abs(val)
+                theta = cmath.phase(val)
+                theta_deg = math.degrees(theta)
+                exp_str = f"{r:.5f} e^(i{theta_deg:.2f}°)"
+                self.labelSolution.configure(text=exp_str, font=self.fontSmall)
+            else:
+                self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
         else:
             self.equation += str(operator)
             self.solutionPreview = self.eval_equation(self.equation)
