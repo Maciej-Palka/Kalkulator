@@ -87,7 +87,10 @@ class HistoriaOperacji:
         except Exception as e:
             print(f"Błąd podczas importu: {e}")
 
-
+    def de_moivre(self, r, theta, n):
+        r_n = r ** n
+        theta_n = theta * n
+        return r_n, theta_n
 class App:
     def __init__(self, disp):
 
