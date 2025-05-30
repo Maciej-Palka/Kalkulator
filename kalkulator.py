@@ -158,7 +158,7 @@ class App:
     def do_de_moivre(self):
         val = self.eval_equation(self.equation)
         if not isinstance(val, complex):
-            self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
+            self.labelSolution.configure(text="Błąd wprowadzenia", font=self.fontSmall)
             return
         n = simpledialog.askinteger("De Moivre", "Podaj wykładnik całkowity n:", parent=self.root, minvalue=1)
         if n is None:
@@ -168,18 +168,13 @@ class App:
         theta = cmath.phase(val)
         r_n = r ** n
         theta_n = theta * n
-        result_c = r_n * cmath.rect(1, theta_n)
-        self.equation = str(result_c)
-        self.labelEquation.configure(text=self.equation, font=self.fontBig)
         theta_deg_n = math.degrees(theta_n)
         trig_result_str = f"{r_n:.5f} (cos {theta_deg_n:.2f}° + i sin {theta_deg_n:.2f}°)"
-        self.labelSolution.configure(
-            text=f"De Moivre:\n{trig_result_str}",
-            font=self.fontSmall
-        )
-        self.historia.zapisz(f"({val})^{n}", result_c)
+        self.labelSolution.configure(text=f"Wynik De Moivre:\n{trig_result_str}", font=self.fontSmall)
+        self.equation = trig_result_str
+        self.labelEquation.configure(text=self.equation, font=self.fontBig)
+        self.historia.zapisz(f"({val})^{n}", trig_result_str)
         self.de_moivre_button.grid_remove()
-        self.labelSolution.configure(text='', font=self.fontSmall)
     # funkcja licząca
     def eval_equation(self, expr):
         # Dozwolone funkcje i zmienne
