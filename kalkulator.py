@@ -1,3 +1,5 @@
+from tkinter import simpledialog
+
 import customtkinter as ctk
 import math
 import cmath
@@ -87,10 +89,10 @@ class HistoriaOperacji:
         except Exception as e:
             print(f"Błąd podczas importu: {e}")
 
-    def de_moivre(self, r, theta, n):
-        r_n = r ** n
-        theta_n = theta * n
-        return r_n, theta_n
+        self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
+        return
+
+
 class App:
     def __init__(self, disp):
 
@@ -150,14 +152,41 @@ class App:
         #stworzenie odpo
         for (text, r, c) in buttons:
             create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
+        self.de_moivre_button = create_btn(self.root, btn_w, btn_h, "De Moivre", custom_font, 7, 3, self.do_de_moivre)
+        self.de_moivre_button.grid_remove()
 
-
-
+    def do_de_moivre(self):
+        val = self.eval_equation(self.equation)
+        if not isinstance(val, complex):
+            self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
+            return
+        n = simpledialog.askinteger("De Moivre", "Podaj wykładnik całkowity n:", parent=self.root, minvalue=1)
+        if n is None:
+            # User canceled the dialog
+            self.de_moivre_button.grid_remove()
+            return
+        r = abs(val)
+        theta = cmath.phase(val)
+        r_n = r ** n
+        theta_n = theta * n
+        result_c = r_n * cmath.rect(1, theta_n)
+        self.equation = str(result_c)
+        self.labelEquation.configure(text=self.equation, font=self.fontBig)
+        theta_deg_n = math.degrees(theta_n)
+        trig_result_str = f"{r_n:.5f} (cos {theta_deg_n:.2f}° + i sin {theta_deg_n:.2f}°)"
+        self.labelSolution.configure(
+            text=f"De Moivre:\n{trig_result_str}",
+            font=self.fontSmall
+        )
+        self.historia.zapisz(f"({val})^{n}", result_c)
+        # Hide De Moivre button after use
+        self.de_moivre_button.grid_remove()  # Hide De Moivre button
+        self.labelSolution.configure(text='', font=self.fontSmall)
     # funkcja licząca
     def eval_equation(self, expr):
         # Dozwolone funkcje i zmienne
         allowed_names = {
-            "sqrt": cmath.sqrt,
+            "sqrt": cmath.sqrt
             "exp": cmath.exp,
             "j": 1j,
             "complex": complex,
@@ -276,8 +305,8 @@ class App:
                 theta_deg = math.degrees(theta)
                 trig_str = f"{r:.5f} (cos {theta_deg:.2f}° + i sin {theta_deg:.2f}°)"
                 self.labelSolution.configure(text=trig_str, font=self.fontSmall)
-            else:
-                self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
+                # Show De Moivre button, hide Trig Form button
+                self.de_moivre_button.grid()  # Show De Moivre button
         elif operator == 'E':  # <-- added handler for exponential form
             if self.equation.strip() == '':
                 self.labelSolution.configure(text="Enter expression first", font=self.fontSmall)
