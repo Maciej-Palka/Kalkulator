@@ -154,7 +154,7 @@ class App:
             create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
         self.de_moivre_button = create_btn(self.root, btn_w, btn_h, "De Moivre", custom_font, 7, 3, self.do_de_moivre)
         self.de_moivre_button.grid_remove()
-
+    #funckja de_moivre z simpledialog
     def do_de_moivre(self):
         val = self.eval_equation(self.equation)
         if not isinstance(val, complex):
@@ -162,7 +162,6 @@ class App:
             return
         n = simpledialog.askinteger("De Moivre", "Podaj wykładnik całkowity n:", parent=self.root, minvalue=1)
         if n is None:
-            # User canceled the dialog
             self.de_moivre_button.grid_remove()
             return
         r = abs(val)
@@ -179,14 +178,13 @@ class App:
             font=self.fontSmall
         )
         self.historia.zapisz(f"({val})^{n}", result_c)
-        # Hide De Moivre button after use
-        self.de_moivre_button.grid_remove()  # Hide De Moivre button
+        self.de_moivre_button.grid_remove()
         self.labelSolution.configure(text='', font=self.fontSmall)
     # funkcja licząca
     def eval_equation(self, expr):
         # Dozwolone funkcje i zmienne
         allowed_names = {
-            "sqrt": cmath.sqrt
+            "sqrt": cmath.sqrt,
             "exp": cmath.exp,
             "j": 1j,
             "complex": complex,
@@ -305,9 +303,9 @@ class App:
                 theta_deg = math.degrees(theta)
                 trig_str = f"{r:.5f} (cos {theta_deg:.2f}° + i sin {theta_deg:.2f}°)"
                 self.labelSolution.configure(text=trig_str, font=self.fontSmall)
-                # Show De Moivre button, hide Trig Form button
-                self.de_moivre_button.grid()  # Show De Moivre button
-        elif operator == 'E':  # <-- added handler for exponential form
+
+                self.de_moivre_button.grid()
+        elif operator == 'E':
             if self.equation.strip() == '':
                 self.labelSolution.configure(text="Enter expression first", font=self.fontSmall)
                 return
