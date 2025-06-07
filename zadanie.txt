@@ -1,0 +1,7 @@
+Dopisano w klasie w funkcji glownej do operacji na pamieciach definincje
+do usuwania:
+def wyczysc(self):
+        self.historia.clear()
+        self.indeks = -1
+        self.tryb_przegladania = False
+
