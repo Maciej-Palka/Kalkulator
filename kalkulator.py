@@ -66,7 +66,7 @@ class HistoriaOperacji:
                     file.write(f"{timestamp} {item}\n")
         except IOError as e:
             print(f"Błąd zapisu do pliku: {e}")
-    
+
     def load_results_from_file(self, filename="results.txt"):
         try:
             with open(filename, "r") as file:
@@ -83,14 +83,14 @@ class HistoriaOperacji:
                     except ValueError:
                         print(f"Błąd parsowania linii: {line}")
                         continue
-
+            return True
         except FileNotFoundError:
             print(f"Plik '{filename}' nie istnieje.")
         except Exception as e:
             print(f"Błąd podczas importu: {e}")
 
-        self.labelSolution.configure(text="Not a complex number", font=self.fontSmall)
-        return
+
+        return False
 
 
 class App:
