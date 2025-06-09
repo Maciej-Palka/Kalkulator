@@ -6,24 +6,28 @@ import cmath
 from collections import deque
 from datetime import datetime
 
+
 # funkcja tworząca przyciski
 def create_btn(parent, width, height, text, font, row, column, command):
     button = ctk.CTkButton(parent, text=text, font=font, command=command, height=height, width=width)
     button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
     return button
 
+
 class HistoriaOperacji:
-    def __init__(self, max_pamiec = 10):
-        self.historia =deque(maxlen=max_pamiec)
+    # Klasa do zarządzania historią operacji (FIFO)
+    def __init__(self, max_pamiec=10):
+        self.historia = deque(maxlen=max_pamiec)
         self.indeks = -1
         self.tryb_przegladania = False
 
-
+    # Zapisuje działanie i wynik do historii
     def zapisz(self, dzialanie: str, wynik: float):
         wpis = f"{dzialanie} = {wynik}"
         self.historia.append(wpis)
-        self.indeks = len(self.historia)-1
+        self.indeks = len(self.historia) - 1
 
+    # Przełącza tryb przeglądania historii (ON/OFF)
     def przelacz_przegladanie(self):
         self.tryb_przegladania = not self.tryb_przegladania
         if self.tryb_przegladania:
@@ -51,13 +55,14 @@ class HistoriaOperacji:
         if self.tryb_przegladania and 0 <= self.index < len(self.historia):
             return self.historia[self.index].split('=')[0].strip()
         return ""
-    
+
     def wyczysc(self):
         self.historia.clear()
         self.indeks = -1
         self.tryb_przegladania = False
 
-    #impor export
+    # import export
+    # Zapisuje historię operacji do pliku tekstowego
     def save_results_to_file(self, filename="./results.txt"):
         try:
             with open(filename, "w") as file:
@@ -67,6 +72,7 @@ class HistoriaOperacji:
         except IOError as e:
             print(f"Błąd zapisu do pliku: {e}")
 
+    # Wczytuje historię operacji z pliku tekstowego
     def load_results_from_file(self, filename="results.txt"):
         try:
             with open(filename, "r") as file:
@@ -79,7 +85,7 @@ class HistoriaOperacji:
                     try:
                         date, time, rest = line.split(" ", 2)
                         expression, result = rest.split(" = ")
-                        self.zapisz(expression.strip(),result.strip())
+                        self.zapisz(expression.strip(), result.strip())
                     except ValueError:
                         print(f"Błąd parsowania linii: {line}")
                         continue
@@ -89,11 +95,11 @@ class HistoriaOperacji:
         except Exception as e:
             print(f"Błąd podczas importu: {e}")
 
-
         return False
 
 
 class App:
+    # Główna klasa aplikacji kalkulatora z UI i logiką
     def __init__(self, disp):
 
         # zmienne potrzebne później
@@ -113,17 +119,15 @@ class App:
         disp.resizable(False, False)
         ctk.set_default_color_theme("dark-blue")
 
-
         # przypisanie wagi do poszczególnych rzędów
         for i in range(4):
             self.root.columnconfigure(i, weight=1)
-        for i in range(8):
+        for i in range(10):
             self.root.rowconfigure(i, weight=1)
-
 
         # ramka z rozwiązaniami
         self.equationsFrame = ctk.CTkFrame(self.root)
-        self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=5, padx=10, pady=10, sticky="nsew")
+        self.equationsFrame.grid(row=0, rowspan=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
 
         # informacje o aktualnej operacji
         self.labelEquation = ctk.CTkLabel(self.equationsFrame, text='', font=self.fontBig)
@@ -138,8 +142,8 @@ class App:
 
         # --- Rozkład przycisków ---
         buttons = [
-            ("Hist", 8, 0),("<", 8, 1), (">", 8, 2), ("X", 8, 3), #historia
-            ("Import",9,0),("Export",9,1),#import export
+            ("Hist", 8, 0), ("<", 8, 1), (">", 8, 2), ("X", 8, 3),  # historia
+            ("Import", 9, 0), ("Export", 9, 1),  # import export
             ("(", 3, 0), (")", 3, 1), ("j", 3, 2),  # nowe
             ("7", 4, 0), ("8", 4, 1), ("9", 4, 2), ("/", 2, 3),
             ("4", 5, 0), ("5", 5, 1), ("6", 5, 2), ("*", 3, 3),
@@ -149,12 +153,13 @@ class App:
             ("T", 9, 2), ("E", 9, 3)
         ]
 
-        #stworzenie odpo
+        # stworzenie odpo
         for (text, r, c) in buttons:
             create_btn(self.root, btn_w, btn_h, text, custom_font, r, c, lambda t=text: self.calculate(t))
         self.de_moivre_button = create_btn(self.root, btn_w, btn_h, "De Moivre", custom_font, 7, 3, self.do_de_moivre)
         self.de_moivre_button.grid_remove()
-    #funckja de_moivre z simpledialog
+
+    # funckja de_moivre z simpledialog
     def do_de_moivre(self):
         val = self.eval_equation(self.equation)
         if not isinstance(val, complex):
@@ -175,7 +180,9 @@ class App:
         self.labelEquation.configure(text=self.equation, font=self.fontBig)
         self.historia.zapisz(f"({val})^{n}", trig_result_str)
         self.de_moivre_button.grid_remove()
+
     # funkcja licząca
+    # Ewaluacja wyrażeń matematycznych z ograniczonym zakresem
     def eval_equation(self, expr):
         # Dozwolone funkcje i zmienne
         allowed_names = {
@@ -205,6 +212,7 @@ class App:
             return "Error"
 
     # funkcja od wykonywania operatorów
+    # Obsługuje kliknięcia wszystkich przycisków kalkulatora
     def calculate(self, operator):
         if operator == 'C':
             self.equation = ''
@@ -212,13 +220,14 @@ class App:
             self.labelEquation.configure(text='')
             self.labelSolution.configure(text='')
 
+            # Oblicz wynik i zapamiętaj jako nowy punkt startowy
         elif operator == '=':
-            self.solution = ''
-            self.solution = self.eval_equation(self.equation)
-            self.labelEquation.configure(text=self.solution, font=self.fontBig)
+            wynik = self.eval_equation(self.equation)
+            self.labelEquation.configure(text=str(wynik), font=self.fontBig)
             self.labelSolution.configure(text='')
-            self.historia.zapisz(self.equation, self.solution)
-            self.solution = ''
+            self.historia.zapisz(self.equation, wynik)
+            self.equation = str(wynik)  # <- teraz wynik staje się nowym wyrażeniem
+
 
         elif operator == 'B':
             self.equation = self.equation[:-1]
@@ -240,7 +249,7 @@ class App:
                 self.solution = 'Error'
             self.labelEquation.configure(text=self.solution, font=self.fontBig)
             self.labelSolution.configure(text='')
-        
+
         elif operator == "Hist":
             if not self.historia.historia:
                 self.labelEquation.configure(text="No history", font=self.fontBig)
@@ -268,7 +277,7 @@ class App:
                 self.equation = ''
                 self.labelEquation.configure(text='History deleted', font=self.fontBig)
                 self.labelSolution.configure(text='', font=self.fontSmall)
-        
+
         elif operator == "Export":
             if not self.historia.historia:
                 self.labelEquation.configure(text='No history to export', font=self.fontBig)
@@ -281,7 +290,7 @@ class App:
             self.labelSolution.configure(text='', font=self.fontSmall)
 
         elif operator == "Import":
-            try: 
+            try:
                 self.historia.load_results_from_file()
                 self.labelEquation.configure(text='History imported', font=self.fontBig)
             except FileNotFoundError:
@@ -318,9 +327,6 @@ class App:
             self.solutionPreview = self.eval_equation(self.equation)
             self.labelEquation.configure(text=self.equation, font=self.fontBig)
             self.labelSolution.configure(text=self.solutionPreview, font=self.fontSmall)
-        
-
-
 
 
 if __name__ == "__main__":
