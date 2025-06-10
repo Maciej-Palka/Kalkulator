@@ -1,9 +1,2 @@
-# Kalkulator
-tutaj dokona się cud stworzenia
-
-do omówienia: 
-- format zapisywania plików json
-- technologie
-- biblioteki
-- ide
-
+# Kalkulator - usuwanie
+W pliku tekstowym znajduje sie dodana funkcja usuwania
